@@ -1,25 +1,26 @@
 import re
 import redis
 import time
+from init.init_redis import init_redis
 
-def word_choice():
-
+def word_choice(filter):
+    print(filter.black_list, '---------------')
     # ---------------------- Фильтры --------------------------------
     # Запретить слова в которых буква встречается больше 1 раза
-    ban = False  # False - разрешено
+    # filter.ban = False  # False - разрешено
     # Какая буква должна повторяться ('*' - любая)
-    double_letter = ''
+    # filter.double_letter = ''
     # Черный список букв
-    black_list = 'аоуеэыию'
+    # filter.black_list = ''
     # Белый список букв (эти буквы объязательны в слове)
-    white_list = ''
+    # filter.white_list = ''
 
     # Буквы, которые есть в слове
     # Если словарь или значение его элемента пустые, значит еще нет букв которые точно есть в слове.
     # Если буквы есть, соварь будет содержать описание известных позиций в слове, позиции обозначаются ключами 0 - 4:
     # Буква в верхнем регистре строки значения обозначает что в этой позиции точно стоит эта буква.
     # В нижнем регистре буквы обозначают что в этой позиции этаи буквы не стоит (но она есть в слове в дргой позиции)
-    existing_letters = {0: '', 1: '', 2: '', 3: '', 4: ''}
+    # filter.existing_letters = {0: '', 1: '', 2: '', 3: '', 4: ''}
 
     # ---------------------------------------------------------------
     # ------------------- Время выполнения ----------------------
@@ -31,17 +32,17 @@ def word_choice():
 
     r = redis.Redis(host='localhost', port=6379, db=0)  # Подключаемся к Redis
 
-    # Проверяем существование базы данных слов по ключу 'all'
+    # Проверяем существование Redis базы данных слов по ключу 'all'
     if not r.exists("all"):
-        exit()  # Создаем базу данных
+        init_redis(r)  # Создаем базу данных
 
     # ------------------------ Фильтр слов ---------------------------------
     # Отсев слов которые содержат буквы из Черного списка
     # Запрашиваем в Redis слова, в которых нет букв из черного списка
     # Слова записаны в группы 'no_x' где x отсутствующая буква
-    if black_list:
+    if filter.black_list:
         # Запрашиваем у Redis пересечение множеств.
-        list_group_name = [f'no_{letter}' for letter in black_list]
+        list_group_name = [f'no_{letter}' for letter in filter.black_list]
         all_words = set(map(lambda x: x.decode('utf-8'), r.sinter(*list_group_name)))
     else:
         # Если Черный список пуст, читаем множество со всеми словами
@@ -49,9 +50,9 @@ def word_choice():
 
     # Отсев слов в которых нет букв из Белого списка
     # Суммируем множества слов в которых нет объязательных букв и отнимаем его от слов, оставшихся после Черного списка
-    if white_list:
+    if filter.white_list:
         # Запрашиваем у Redis сумму множеств
-        list_group_name = [f'no_{letter}' for letter in white_list]
+        list_group_name = [f'no_{letter}' for letter in filter.white_list]
         all_words -= set(map(lambda x: x.decode('utf-8'), r.sunion(*list_group_name)))
 
     # Подготовка фильтров на основе присутствующих в слове букв
@@ -69,11 +70,11 @@ def word_choice():
     #    Запоминаем это множкство в python для первй буквы.
     #    Для остальных букв находим пересечение с запомненным множеством и сохраняем туда же.
     # 3. Находим пересечение множеств после п.1 и п.2
-    if existing_letters:
+    if filter.existing_letters:
         exist_in_position = set()
         exist_out_of_position = set()
         exist_out_of_position_inverse = set()
-        for pos, val in existing_letters.items():
+        for pos, val in filter.existing_letters.items():
             if val:
                 if val.islower():
                     for letter in val:
@@ -118,13 +119,13 @@ def word_choice():
     summ = 0
     for word in all_words:
         # Исключаем слова, с дублированием букв
-        if ban and re.findall(r'(\w).*\1+', word):
+        if filter.ban and re.findall(r'(\w).*\1+', word):
             continue
         # Исключаем слово, если заданные буквы не встречаются в нем более 1 раза
-        if double_letter:
-            if double_letter != '*':
+        if filter.double_letter:
+            if filter.double_letter != '*':
                 stop = False
-                for letter in double_letter:
+                for letter in filter.double_letter:
                     if word.count(letter) < 2:
                         stop = True
                         break
@@ -152,8 +153,7 @@ def word_choice():
     print(f"{(time.time() - start_time) * 1000} миллисекунд")
     # ------------------- Время выполнения ----------------------
 
-    # print(f'\n{summ} слов всего')
-    return out_words, summ
+    return out_words
 
 
 
