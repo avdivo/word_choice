@@ -13,29 +13,44 @@ class Filter(BaseModel):
     double_letter: str = ''  # Какие буквы должны повторяться ('*' - любые)
     ban: bool = False  # Запретить слова в которых буква встречается больше 1 раза (True), False - разрешено
 
+# Проверить комбинацию existing_letters: А ш щр
+
     @root_validator()
     def verify_password_match(cls, filter):
         """Проверка согласованности данных фильтра"""
 
-        black_list = filter.get("black_list")
-        white_list = filter.get('white_list')
-        existing_letters = filter.get("existing_letters")
-        double_letter = filter.get('double_letter')
-        ban = filter.get('ban')
+        # Перевод входных данных к нижнему регистру и удаление дубликатов
+        filter['black_list'] = ''.join(set(filter.get("black_list").lower()))
+        filter['white_list'] = ''.join(set(filter.get("white_list").lower()))
+        filter['double_letter'] = ''.join(set(filter.get("double_letter").lower()))
+        existing_letters = ''
+        for k, v in filter['existing_letters'].items():
+            filter['existing_letters'][k] = ''.join(set(v))
+            existing_letters += filter['existing_letters'][k]
+
         mes = ''
-        filter['black_list'] = filter.get("black_list").lower()
-        print(re.fullmatch(r'[а-я]+', filter['black_list']))
+        if not re.fullmatch(r'[а-я]+', filter['black_list']) and filter['black_list']:
+            mes = 'Hедопустимые символы в Черном списке. '
 
-        if set(black_list) & set(white_list):
-            mes = 'Одинаковые буквы в Черном и Белом списках. '
+        if not re.fullmatch(r'[а-я]+', filter['white_list']) and filter['white_list']:
+            mes += 'Hедопустимые символы в Белом списке. '
 
-        if set(black_list) & set(double_letter):
+        if not re.fullmatch(r'[а-я\*]+', filter['double_letter']) and filter['double_letter']:
+            mes += 'Hедопустимые символы в списке Дублей. '
+
+        if not re.fullmatch(r'[А-Яа-я]+', existing_letters) and existing_letters:
+            mes += 'Hедопустимые символы в позициях. '
+
+        if set(filter['black_list']) & set(filter['white_list']):
+            mes += 'Одинаковые буквы в Черном и Белом списках. '
+
+        if set(filter['black_list']) & set(filter['double_letter']):
             mes += 'Буква, которая в слове должна дублироваться занесена в Черный список. '
 
-        if ban and double_letter:
+        if filter['ban'] and filter['double_letter']:
             mes += 'Дублирование букв в слове запрещено, однако ведется поиск с дублируемой буквой. '
 
-        if set(black_list) & set([x.lower() for x in existing_letters.values()]):
+        if set(filter['black_list']) & set([x.lower() for x in filter['existing_letters'].values()]):
             mes += 'В Черном списке указаны буквы которые должны писутствовать в слове.'
 
         if mes:

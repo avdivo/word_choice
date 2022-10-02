@@ -4,7 +4,7 @@ import time
 from init.init_redis import init_redis
 
 def word_choice(filter):
-    print(filter.black_list, '---------------')
+    print(filter.existing_letters, '---------------')
     # ---------------------- Фильтры --------------------------------
     # Запретить слова в которых буква встречается больше 1 раза
     # filter.ban = False  # False - разрешено
