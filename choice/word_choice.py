@@ -5,6 +5,7 @@ from init.init_redis import init_redis
 
 def word_choice(filter):
     print(filter.existing_letters, '---------------')
+
     # ---------------------- Фильтры --------------------------------
     # Запретить слова в которых буква встречается больше 1 раза
     # filter.ban = False  # False - разрешено
@@ -48,6 +49,18 @@ def word_choice(filter):
         # Если Черный список пуст, читаем множество со всеми словами
         all_words = set(map(lambda x: x.decode('utf-8'), r.smembers('all')))
 
+
+
+    # if filter.existing_letters[0] == '':
+    #     for i in range(1500000):
+    #         all_words = list(all_words)
+    #         all_words = set(all_words)
+    #         if i % 1000 == 0:
+    #             print(filter.existing_letters[1])
+    #
+
+
+
     # Отсев слов в которых нет букв из Белого списка
     # Суммируем множества слов в которых нет объязательных букв и отнимаем его от слов, оставшихся после Черного списка
     if filter.white_list:
@@ -74,9 +87,12 @@ def word_choice(filter):
         exist_in_position = set()
         exist_out_of_position = set()
         exist_out_of_position_inverse = set()
+        filter_work_exist_in_position = False  # Если фильтр работал, то применяем его результаты к списку,
+        filter_work_exist_out_of_position = False  # даже еси результат пустой
         for pos, val in filter.existing_letters.items():
             if val:
                 if val.islower():
+                    filter_work_exist_out_of_position = True
                     for letter in val:
                         # Добавляем имена групп с данной буквой, кроме того, где она стоит в рассматриваемой
                         # позиции, слова где эта буква в этой позиции не включаются
@@ -104,10 +120,11 @@ def word_choice(filter):
                 else:
                     # Для букв которые стоят на своих позициях
                     exist_in_position.add('.....'[:pos] + val[0].lower() + '.' * (4 - pos))
-        if exist_in_position:
+                    filter_work_exist_in_position = True
+        if exist_in_position or filter_work_exist_in_position:
             exist_in_position = set(map(lambda x: x.decode('utf-8'), r.sinter(exist_in_position)))
             all_words &= exist_in_position
-        if exist_out_of_position:
+        if exist_out_of_position or filter_work_exist_out_of_position:
             all_words &= exist_out_of_position
 
     # Разбивка на группы и сортировка перед выводом

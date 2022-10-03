@@ -13,7 +13,7 @@ class Filter(BaseModel):
     double_letter: str = ''  # Какие буквы должны повторяться ('*' - любые)
     ban: bool = False  # Запретить слова в которых буква встречается больше 1 раза (True), False - разрешено
 
-# Проверить комбинацию existing_letters: А ш щр
+# uvicorn main:app --reload
 
     @root_validator()
     def verify_password_match(cls, filter):
