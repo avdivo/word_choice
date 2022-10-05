@@ -1,0 +1,56 @@
+<!DOCTYPE HTML>
+<html>
+ <head>
+  <meta charset='utf-8'>
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=1.0, user-scalable=0"> 
+  <link href="keyboard.css" rel="stylesheet" media="screen">
+  <link href="keyboard.css" rel="stylesheet" media="handheld">
+  <title>Клавиатура</title>
+ </head>
+
+<body>
+
+
+<!-- Клавиатура -->
+<div align='center' id='keyboard' class='screen'>
+
+    <div class='disp'><div class='sim1' id='display'></div></div>
+
+    <div class='digit'>
+        <div class='key' id='7' onclick='key(this)'><div class='sim'>7</div></div>
+        <div class='key' id='8' onclick='key(this)'><div class='sim'>8</div></div>
+        <div class='key' id='9' onclick='key(this)'><div class='sim'>9</div></div>
+
+    <br>
+        <div class='key' id='4' onclick='key(this)'><div class='sim'>4</div></div>
+        <div class='key' id='5' onclick='key(this)'><div class='sim'>5</div></div>
+        <div class='key' id='6' onclick='key(this)'><div class='sim'>6</div></div>
+
+    <br>
+        <div class='key' id='1' onclick='key(this)'><div class='sim'>1</div></div>
+        <div class='key' id='2' onclick='key(this)'><div class='sim'>2</div></div>
+        <div class='key' id='3' onclick='key(this)'><div class='sim'>3</div></div>
+
+    <br>
+        <div class='null' id='0' onclick='key(this)'><div class='sim'>0</div></div>
+    </div>   
+    <div class='digit'>
+        <div class='one' id='x' onclick='key(this)'><div class='sim'>x</div></div><br>
+        <div class='one' id='del' onclick='key(this)'><div class='sim'>&#8592;</div></div><br>
+        <div class='ok' id='ok' onclick='key(this)'><div class='sim2'>Ok</div></div>
+
+    </div>   
+
+</div> 
+
+<!--Скрытые поля для отправки данных -->
+<input name="from" id = "from" type="hidden" form="data" value='quickSend'/>
+<input name="mes" id = "mes" type="hidden" form="data" value=''/>
+
+<form type="submit" id="data" method="post" action="index.php" ></form>
+
+</body>
+ 
+<script src="js/keyboard.js"></script>
+
+</html>
