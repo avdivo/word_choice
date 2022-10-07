@@ -68,11 +68,12 @@
 }
 
 .letter {
+    vertical-align: middle;
     width: 70px;
     height: 70px;
     text-align: center;
     color: #5a6376!important;
-    color: inherit;
+    background-color: #dce1ed;
     font-size: 45px;
     font-weight: 700;
     text-decoration: inherit;
@@ -91,6 +92,35 @@
         background-color: #0d6efd;
     }
 }
+
+.letter-mini {
+    vertical-align: middle;
+    width: 70px;
+    height: 70px;
+    word-wrap: break-word;
+    line-height: 21px;
+    text-align: center;
+    color: #5a6376!important;
+    color: inherit;
+    font-size: 20px;
+    font-weight: 700;
+    text-decoration: inherit;
+    text-transform: lowercase;
+    display: inline-block;
+    border: 1px solid transparent;
+    border-color: #0d6efd;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-bottom: 20px;
+
+}
+@media (hover: hover) and (pointer: fine) {
+    .letter-mini:hover {
+        background-color: #0d6efd;
+    }
+}
+
 
 
       .bd-placeholder-img {
@@ -275,11 +305,11 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-auto">
-        <div class='letter' id='4' onclick='key(this)'>1</div>
-        <div class='letter' id='4' onclick='key(this)'>2</div>
-        <div class='letter' id='4' onclick='key(this)'>3</div>
-        <div class='letter' id='4' onclick='key(this)'>4</div>
-        <div class='letter' id='4' onclick='key(this)'>5</div>
+        <div class='letter' id='4' onclick='key(this)'></div>
+        <div class='letter' id='4' onclick='key(this)'>А</div>
+        <div class='letter-mini' id='4' onclick='key(this)'>йцукенгшщзячсми</div>
+        <div class='letter' id='4' onclick='key(this)'></div>
+        <div class='letter' id='4' onclick='key(this)'></div>
 </div>
       </div>
 </div>
