@@ -178,11 +178,11 @@
 <div class="container">
   <div class="row">
     <div class="btn-group" role="group" aria-label="Basic outlined example">
-      <button type="button" class="btn btn-outline-primary">Черный список</button>
-      <button type="button" class="btn btn-outline-primary">Белый список</button>
-      <button type="button" class="btn btn-outline-primary">Выбор дублей</button>
-      <button type="button" class="btn btn-outline-primary" data-bs-toggle="button" autocomplete="off">Запрет дублей</button>
-      <button type="button" class="btn btn-outline-primary">Сброс</button>
+      <button type="button" class="btn btn-outline-primary" id="black_list">Черный список</button>
+      <button type="button" class="btn btn-outline-primary" id="white_list">Белый список</button>
+      <button type="button" class="btn btn-outline-primary" id="double_letter">Выбор дублей</button>
+      <button type="button" class="btn btn-outline-primary" id="ban" data-bs-toggle="button" autocomplete="off">Запрет дублей</button>
+      <button type="button" class="btn btn-outline-primary" id="refresh">Сброс</button>
     </div>
   </div>
 </div>
@@ -320,7 +320,9 @@
 
 </footer>
 
-  <script src="bootstrap.bundle.min.js"></script>
-      
+<script src="jquery-3.6.1.min.js"></script>
+<script src="main.js"></script>
+<script src="bootstrap.bundle.min.js"></script>
+
   </body>
 </html>
