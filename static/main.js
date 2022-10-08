@@ -1,7 +1,9 @@
+
+
 // Классы для списков (черный, белый, дубли, буквы)
 class Lists {
 
-    static obj = [] // Список объектов класса
+    static filter = {} // Ассоциированный массив - id DOM элемента : объект этого класса
 
     // Устанавливает общие свойства и методы всех списков
     constructor(element) {
@@ -9,7 +11,7 @@ class Lists {
         this.list = [];  // Список выбранных букв
         this.old_bg = element.css('background-color'); // Запомнить цвет фона
         this.old_ink = element.css('color'); // Запомнить цвет текста
-        Lists.obj.push(this)
+        Lists.filter[element.attr('id')] = this
     }
 
     // Активация фильтра (изменение вида переключателя)
@@ -21,10 +23,10 @@ class Lists {
 
     // Деактивация всех переключателей (возврат в исходное состояние)
     static deactivate() {
-        Lists.obj.forEach(function(item, i, arr) {
+        for (let item of Object.values(Lists.filter)) {
             item.element.css({'background-color': item.old_bg});
             item.element.css({'color': item.old_ink});
-        });
+        }
     }
 }
 
@@ -37,7 +39,7 @@ class Letters extends Lists {
         this.old_bg = element.css('background-color');
         this.old_ink = element.css('color');
         this.here = false;  // Определяет, стоит ли в этой позиции буква из списка. Или она в этом слове, но не здксь
-        Lists.obj.push(this)
+        Lists.filter[element.attr('id')] = this
     }
 
 }
@@ -45,14 +47,12 @@ class Letters extends Lists {
 
 // Заполнение фильтров, контроль. Отправление, получение данных. Вывод списка слов
 $(document).ready(function(){
-
-    var black_list = new Lists($('#black_list'));  // Черный список. Объект
-    var white_list = new Lists($('#white_list'));  // Белый список. Объект
-    var double_letter = new Lists($('#double_letter'));  // Дубликаты букв
-    var existing_letters = [];  // Массив с объектами для каждоой буквы
+    new Lists($('#black_list'));  // Черный список
+    new Lists($('#white_list'));  // Белый список
+    new Lists($('#double_letter'));  // Дубликаты букв
+    // Для каждоой буквы
     for (let i = 1; i < 6; i++) {
-    alert($('#l' + i).attr('id'))
-        existing_letters.push(new Letters($('#l' + i)))
+        new Letters($('#l' + i))
     }
 //    var kb = Keyboard();  // Инициализация клавиатуры
 
@@ -65,20 +65,16 @@ $(document).ready(function(){
 
 
 // ------------------ Обработка событий -------------------------
-
     // Черный список
-    $('#black_list').click(function(){
-        black_list.activate()
+    $('.btn').click(function(){
+        if (this.id in Lists.filter ){
+            Lists.filter[this.id].activate()
+        };
     });
 
     // Белый> список
-    $('#white_list').click(function(){
-        white_list.activate()
-    });
-
-    // Дубли
-    $('#double_letter').click(function(){
-        double_letter.activate()
+    $('.letter').click(function(){
+        Lists.filter[this.id].activate()
     });
 
 
