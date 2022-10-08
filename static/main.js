@@ -1,12 +1,28 @@
 // Классы для списков (черный, белый, дубли, буквы)
 class Lists {
+
+    static obj = [] // Список объектов класса
+
     // Устанавливает общие свойства и методы всех списков
     constructor(element) {
-        this.element = element // Объекд в DOM отвечающий за выбор этой группы настроек
+        this.element = element // Объекд в DOM отвечающий за выбор фильтра
         this.list = [];  // Список выбранных букв
+        this.old_class = element.attr('class');
+        Lists.obj.push(this)
     }
 
+    // Активация фильтра (изменение вида переключателя)
+    activate() {
+        Lists.deactivate();
+        this.element.attr('class', 'btn btn-primary');
+    }
 
+    // Деактивация всех переключателей (возврат в исходное состояние)
+    static deactivate() {
+        Lists.obj.forEach(function(item, i, arr) {
+            item.element.attr('class', item.old_class);
+        });
+    }
 }
 
 // Класс для букв наследуем от общего, добавляем свойства и методы
@@ -32,15 +48,27 @@ $(document).ready(function(){
 //    var ban = false;  // Запрет дубликатов букв
 
 
-    alert(double_letter.element.css({'background-color' : '#ff0000'}));
+//    alert(double_letter.element.css({'background-color' : '#ff0000'}));
 
 
 
 
+// ------------------ Обработка событий -------------------------
 
+    // Черный список
+    $('#black_list').click(function(){
+        black_list.activate()
+    });
 
+    // Белый> список
+    $('#white_list').click(function(){
+        white_list.activate()
+    });
 
-
+    // Дубли
+    $('#double_letter').click(function(){
+        double_letter.activate()
+    });
 
 
 });
