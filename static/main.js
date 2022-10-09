@@ -139,6 +139,11 @@ class Keyboard {
 
     // Включение или выключение на клавиатуре буквы. Изменение активного фильтра
     pressKey(keyID) {
+        if (keyID == 'key33') {
+            // Очистка фильтра
+            this.clearKB();
+            this.filter.list = new String('');
+        }
 
         let letter = this.keys[keyID].text().toLowerCase();
         if (this.filter.list.indexOf(letter) > -1) {
