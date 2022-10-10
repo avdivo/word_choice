@@ -13,6 +13,7 @@ function warning(mess) {
 }
 
 // ------------------------------------------------------------------------------------
+
 // Класс снопки Запрет дублей букв в слове
 class Ban {
     constructor(element){
@@ -95,14 +96,14 @@ class Lists {
     }
 
     // Вернуть цвета фона и текста, которые нужно установить для фильтра когда он не активен
-    #colors() {
+    colors() {
         return [this.old_bg, this.old_ink];
     }
 
     // Деактивация всех переключателей фильтров кроме букв(возврат в исходное состояние)
     static deactivate() {
         for (let item of Object.values(Lists.filter)) {
-            let [bg, ink] = item.#colors();
+            let [bg, ink] = item.colors();
             item.element.css({'background-color': bg});
             item.element.css({'color': ink});
         }
@@ -110,9 +111,30 @@ class Lists {
 
     // Получить объект фильтра по ключу (id DOM объекта)
     static getFilter(key) {
-        return Lists.filter[key]
+        return Lists.filter[key];
     }
 
+    // Есть ли буква в списке. Если нет - добавить, если есть удалить. Вернуть результат, была или нет
+    is_letter(letter) {
+        if (this.list.indexOf(letter) > -1){
+            this.list = this.list.replace(letter, '');
+            this.out_letters();
+            return true;
+        } else {
+            if (this.what_type == 'Letters') {
+                if (this.here && this.list.length > 0) {
+                    return true;  // Попытка постваить вторую угадонную букву в одну позицию
+                }
+            }
+            this.list = this.list + letter;
+            this.out_letters();
+            return false;
+        }
+    }
+
+    // Метод вывода выбранных букв в поле фильтра. В этом классе уфильтра нет поля и метод пустой
+    out_letters() {
+    }
 
 
 }
@@ -137,15 +159,33 @@ class Letters extends Lists {
 
     // Вернуть цвета фона и текста, которые нужно установить для фильтра когда он не активен
     // Этот класс имеет другие цвета для фильтров, когда буква стоит на месте
-    #colors() {
+    colors() {
         return [this.here ? this.here_bg : this.old_bg, this.here ? this.here_ink : this.old_ink];
     }
 
     // Изменение чекбокса буквы (меняется стстус: эта буква стоит тут или эта буква есть в этом слове, но не тут)
-    // В первом случае меняется класс поля (цвет
-    change() {
-
+    // В обоих случаях меняется вид поля (стиль)
+    change(here) {
+        this.here = here;
+        if (here) {
+            // Включается режим угаданной буквы для этой позиции
+            if (this.list.length > 1) {
+                this.list = '';  // Очищаем фильтр, если в нем более 1 буквы (угаданная будет только 1)
+            }
+            // изменим значение DOM-свойства className
+            this.element.prop('className', 'letter');
+        } else {
+            this.element.prop('className', 'letter-mini');
+        }
+        this.out_letters();
     }
+
+    // Метод вывода выбранных букв в поле фильтра
+    out_letters() {
+        this.element.text(this.list);
+    }
+
+
 }
 
 // -------------------------------------------------------------------------------------
@@ -181,18 +221,20 @@ class Keyboard {
             // Очистка фильтра
             this.clearKB();
             this.filter.list = new String('');
-            warning('ok');
+            warning('Фильтр очищен');
         }
 
         let letter = this.keys[keyID].text().toLowerCase();
-        if (this.filter.list.indexOf(letter) > -1) {
+        if (this.filter.is_letter(letter)) {
+            // Буква была в фильтре
             this.keys[keyID].css({'background-color': this.old_bg});
             this.keys[keyID].css({'color': this.old_ink});
-            this.filter.list = this.filter.list.replace(letter, '')
         } else {
-            this.keys[keyID].css({'background-color': '#0d6efd'});
-            this.keys[keyID].css({'color': 'white'});
-            this.filter.list = this.filter.list + letter;
+            // Буквы не было в фильтре
+//            this.keys[keyID].css({'background-color': '#0d6efd'});
+//            this.keys[keyID].css({'color': 'white'});
+            this.keys[keyID].removeClass('key');
+            this.keys[keyID].addClass('activate_filter');
         }
     }
 
@@ -210,7 +252,9 @@ class Keyboard {
         for (let i = 1; i < 33; i++) {
             this.keys['key' + i].css({'background-color': this.old_bg})
             this.keys['key' + i].css({'color': this.old_ink});
+            this.keys['key' + i].prop('className', 'key');
         }
+
     }
 
 
@@ -246,14 +290,15 @@ $(document).ready(function(){
     });
 
     // Буквы слова
-    $('.letter').click(function(){
+    $('.letter').add('.letter-mini').click(function(){
         kb.activateFilter(Lists.filter[this.id]);
     });
 
     // Чекбоксы для букв слова
-    $('.check').click(function(){
-        alert(this.id)
-        Lists.filter['l' + this.id[2]].change();
+    $('.form-check-input').click(function(){
+        id = 'l' + this.id[2];
+        Lists.filter[id].change(this.checked);
+        kb.activateFilter(Lists.filter[id]);
     });
 
     // Запрет дублей

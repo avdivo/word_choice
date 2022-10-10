@@ -24,10 +24,16 @@
     font-weight: 700;
     text-decoration: inherit;
     min-height: 30px;
-
-
-
 }
+
+
+.activate_filter {
+    background-color: #000000;
+    color: white;
+    font-size: 50px;
+}
+
+
 .row{
     margin-top: 20px;
     margin-bottom: 20px;
@@ -54,7 +60,7 @@
 .key {
     align-items: center;
     background-color: #dce1ed;
-    color: #5a6376!important;
+    color: #5a6376;
     border: 2px solid transparent;
     border-radius: 4px;
     color: inherit;
@@ -79,6 +85,15 @@
 }
 
 
+.above_letter {
+    vertical-align: middle;
+    text-align: center;
+    display:inline-block;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
 .letter-mini {
     vertical-align: middle;
     width: 70px;
@@ -86,7 +101,7 @@
     word-wrap: break-word;
     line-height: 21px;
     text-align: center;
-    color: #5a6376!important;
+    color: #5a6376;
     color: inherit;
     font-size: 20px;
     font-weight: 700;
@@ -107,26 +122,17 @@
     }
 }
 
-.above_letter {
-    vertical-align: middle;
-    text-align: center;
-    display:inline-block;
-    cursor: pointer;
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
 .letter {
     vertical-align: middle;
     width: 70px;
     height: 70px;
     text-align: center;
-    color: #5a6376!important;
-    background-color: white;
+    color: #5a6376;
+    background-color: #00ff00;
     font-size: 45px;
     font-weight: 700;
     text-decoration: inherit;
-    text-transform: capitalize;
+    text-transform: uppercase;
     display:inline-block;
     border: 1px solid transparent;
     border-color: #0d6efd;
@@ -140,6 +146,7 @@
         background-color: #0d6efd;
     }
 }
+
 
 .check {
     font-size: 30px;
@@ -329,31 +336,31 @@
       <div class="row justify-content-center">
         <div class="col-md-auto">
             <div class='above_letter'>
-              <div class='letter' id='l1'>1</div>
+              <div class='letter-mini' id='l1'></div>
               <div class="check">
                 <input class="form-check-input" type="checkbox" id="ch1">
               </div>
             </div>
             <div class='above_letter'>
-              <div class='letter' id='l2'>1</div>
+              <div class='letter-mini' id='l2'></div>
               <div class="check">
                 <input class="form-check-input" type="checkbox" id="ch2">
               </div>
             </div>
             <div class='above_letter'>
-              <div class='letter' id='l3'>1</div>
+              <div class='letter-mini' id='l3'></div>
               <div class="check">
                 <input class="form-check-input" type="checkbox" id="ch3">
               </div>
             </div>
             <div class='above_letter'>
-              <div class='letter' id='l4'>1</div>
+              <div class='letter-mini' id='l4'></div>
               <div class="check">
                 <input class="form-check-input" type="checkbox" id="ch4">
               </div>
             </div>
             <div class='above_letter'>
-              <div class='letter' id='l5'>1</div>
+              <div class='letter-mini' id='l5'></div>
               <div class="check">
                 <input class="form-check-input" type="checkbox" id="ch5">
               </div>
