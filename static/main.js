@@ -1,5 +1,16 @@
 var kb = {};  // Представляет объект клавиатуры, доступный везде
 var ban;  // Представляет объект ban, запрещающий дубликаты букв в слове, доступный везде
+// ------------------------------------------------------------------------------------
+
+// Вывод предупреждения
+function warning(mess) {
+    $('#warning').text(mess); // Показать сообщение
+
+    // Скрываем сообщение
+    setTimeout(function(){
+        $('#warning').text('');
+    }, 5000);
+}
 
 // ------------------------------------------------------------------------------------
 // Класс снопки Запрет дублей букв в слове
@@ -27,6 +38,7 @@ class Ban {
             } else {
                 let dl = Lists.getFilter('double_letter')
                 if (dl.isActive() || dl.getList().length > 0) {
+                    warning('Нельзя запрещать дубли, если они указаны в фильтре Выбор дублей или фильтр активен')
                     return false
                 } else {
                     this.element.css({'background-color': '#0d6efd'});
@@ -49,12 +61,15 @@ class Lists {
 
     // Устанавливает общие свойства и методы всех списков
     constructor(element) {
-        this.element = element // Объекд в DOM отвечающий за выбор фильтра
-        this.name = element.attr('id')
+        this.what_type = 'Lists';
+        this.element = element; // Объекд в DOM отвечающий за выбор фильтра
+        this.name = element.attr('id');
         this.list = new String('');  // Список выбранных букв
-        this.old_bg = element.css('background-color'); // Запомнить цвет фона
-        this.old_ink = element.css('color'); // Запомнить цвет текста
-        Lists.filter[this.name] = this
+        this.old_bg = 'rgba(0, 0, 0, 0)'; // Устанавливаем исходный цвет фона
+        this.old_ink = 'rgb(13, 110, 253)'; // Устанавливаем исходный цвет текста
+        this.active_bg = '#0d6efd';  // Цвет фона, когда фильтр активен
+        this.active_ink = 'white';  // Цвет текста, когда фильтр активен
+        Lists.filter[this.name] = this;
     }
 
     // Список букв в фильтре
@@ -70,19 +85,26 @@ class Lists {
     // Активация фильтра (изменение вида переключателя) в случае успешной активации вернет true
     activate() {
         if (this.name == 'double_letter' && ban.get()) {
-            return false  // Нельзя активировать фильтр дублей, если дубли запрещены
+            warning('Нельзя активировать фильтр Выбор дублей, если дубли запрещены');
+            return false
         }
         Lists.deactivate();
-        this.element.css({'background-color': '#0d6efd'});
-        this.element.css({'color': 'white'});
+        this.element.css({'background-color': this.active_bg});
+        this.element.css({'color': this.active_ink});
         return true
     }
 
-    // Деактивация всех переключателей (возврат в исходное состояние)
+    // Вернуть цвета фона и текста, которые нужно установить для фильтра когда он не активен
+    #colors() {
+        return [this.old_bg, this.old_ink];
+    }
+
+    // Деактивация всех переключателей фильтров кроме букв(возврат в исходное состояние)
     static deactivate() {
         for (let item of Object.values(Lists.filter)) {
-            item.element.css({'background-color': item.old_bg});
-            item.element.css({'color': item.old_ink});
+            let [bg, ink] = item.#colors();
+            item.element.css({'background-color': bg});
+            item.element.css({'color': ink});
         }
     }
 
@@ -99,15 +121,31 @@ class Lists {
 // Класс для букв наследуем от общего, добавляем свойства и методы
 class Letters extends Lists {
     constructor(element) {
-        super(element)
-        this.element = element // Объекд в DOM отвечающий за выбор фильтра
+        super(element);
+        this.what_type = 'Letters';
+        this.element = element; // Объекд в DOM отвечающий за выбор фильтра
         this.list = new String('');  // Список выбранных букв
-        this.old_bg = element.css('background-color');
-        this.old_ink = element.css('color');
+        this.old_bg = 'rgb(255, 255, 255)';  // Устанавливаем исходный цвет фона
+        this.old_ink = 'rgb(13, 110, 253)'; // Устанавливаем исходный цвет текста
+        this.active_bg = '#0d6efd';  // Цвет фона, когда фильтр активен
+        this.active_ink = 'white';  // Цвет текста, когда фильтр активен
+        this.here_bg = '#00ff00';  // Цвет фона, когда известна буква
+        this.here_ink = 'white';  // Цвет текста, когда известна буква
         this.here = false;  // Определяет, стоит ли в этой позиции буква из списка. Или она в этом слове, но не здксь
         Lists.filter[element.attr('id')] = this
     }
 
+    // Вернуть цвета фона и текста, которые нужно установить для фильтра когда он не активен
+    // Этот класс имеет другие цвета для фильтров, когда буква стоит на месте
+    #colors() {
+        return [this.here ? this.here_bg : this.old_bg, this.here ? this.here_ink : this.old_ink];
+    }
+
+    // Изменение чекбокса буквы (меняется стстус: эта буква стоит тут или эта буква есть в этом слове, но не тут)
+    // В первом случае меняется класс поля (цвет
+    change() {
+
+    }
 }
 
 // -------------------------------------------------------------------------------------
@@ -143,6 +181,7 @@ class Keyboard {
             // Очистка фильтра
             this.clearKB();
             this.filter.list = new String('');
+            warning('ok');
         }
 
         let letter = this.keys[keyID].text().toLowerCase();
@@ -211,6 +250,12 @@ $(document).ready(function(){
         kb.activateFilter(Lists.filter[this.id]);
     });
 
+    // Чекбоксы для букв слова
+    $('.check').click(function(){
+        alert(this.id)
+        Lists.filter['l' + this.id[2]].change();
+    });
+
     // Запрет дублей
     $('#ban').click(function(){
         ban.set();
@@ -220,5 +265,6 @@ $(document).ready(function(){
     $('.key').click(function(){
         kb.pressKey(this.id);
     });
+
 
 });
