@@ -121,7 +121,7 @@ class Lists {
             if (this.what_type == 'Letters') {
                 if (this.here && this.list.length > 0) {
                     warning('Нельзя постваить вторую угадонную букву в одну позицию');
-                    return true;  // Попытка постваить вторую угадонную букву в одну позицию
+                    list = '';  // Попытка постваить вторую угадонную букву в одну позицию
                 }
             }
             this.list = list + letter;
@@ -177,8 +177,12 @@ class Letters extends Lists {
     out_letters() {
         if (this.here) {
             this.list = this.list.toUpperCase();
+        } else {
+            this.list = this.list.toLowerCase();
         }
         this.element.text(this.list);
+        kb.clearKB();
+        kb.initKeyboard();
     }
 
 }
@@ -272,16 +276,51 @@ function init() {
 }
 
 // -------------------------------------------------------------------------------------
-function show()
-{
-    $.ajax({
-        url: "",
-        cache: false,
-        success: function(html){
-            $("#content").html(html);
-        }
-    });
-}
+// Отправка фильтров на API. Получение слов и вывод
+function get_words(filter){
+        var data = filter  // Получаем и передаем как JSON
+
+         $.ajax({
+             url: 'http://127.0.0.1:8000/',
+             type: 'POST',
+               headers: {
+    "Content-type": "application/json"
+  },
+             data: data,
+             cache: true,
+             success: function (data) {
+                 // console.log(data.products);
+//                $('#exampleModal').modal('show'); // Показать сообщение о добавлении товара в корзину
+//                 // Сурываем сообщение о добавлении товара в корзину
+//                setTimeout(function(){
+//                    $('#exampleModal').modal('hide');
+//                }, 1100);
+
+                // Изменяем отображаемое значение на корзине
+                let s = 0;
+                $('#out').text('');
+                for (let i = 0; i < data.length; i++) {
+                    $('#out').append('<div class="alert alert-secondary" role="alert">' + data[i].join(', ') + "</div>");
+                    s = s + data[i].length;
+                }
+                $('#out').append('<div class="alert alert-danger" role="alert">Всего: ' + s + " слов.</div>");
+                document.location.href = $('#out').attr("href");
+//                $("html, body").animate({
+//                    scrollTop: $($('#out').attr("href")).offset().top + "px"
+//                }, {
+//                     duration: 500,
+//                     easing: "swing"
+//                });
+
+
+             },
+             error: function(){
+                 console.log("error")
+             }
+         })
+
+    }
+
 
 // -------------------------------------------------------------------------------------
 $(document).ready(function(){
@@ -297,6 +336,27 @@ $(document).ready(function(){
         if (this.id == 'refresh') {
             location.reload();
         }
+
+    });
+
+    // Отправка
+    $('#submit').click(function(){
+        let filter = Lists.filter;
+        let send = {
+            black_list: filter['black_list'].list,
+            white_list: filter['white_list'].list,
+            existing_letters: {
+                0: filter['l1'].list,
+                1: filter['l2'].list,
+                2: filter['l3'].list,
+                3: filter['l4'].list,
+                4: filter['l5'].list
+            },
+            double_letter: filter['double_letter'].list,
+            ban: ban.ban
+        };
+        let json = JSON.stringify(send);
+        get_words(json);
     });
 
     // Буквы слова
