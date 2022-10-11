@@ -14,157 +14,160 @@
 
     <!-- Bootstrap core CSS -->
 <link href="bootstrap.min.css" rel="stylesheet">
-
     <style>
-.warning {
-    margin-bottom: 20px;
-    text-align: center;
-    color: #ff0000;
-    font-size: 20px;
-    font-weight: 700;
-    text-decoration: inherit;
-    min-height: 30px;
-}
-
-
-.activate_filter {
-    background-color: #000000;
-    color: white;
-    font-size: 50px;
-}
-
-
-.row{
-    margin-top: 20px;
-    margin-bottom: 20px;
-    }
-
-.App-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin: 0 auto;
-    width: 100%;
-    position: relative;
-}
-.App-container, .cont, .sect_m {
-    max-width: 800px;
-}
-
-.Keyboard-row {
-    display: flex;
-    flex-direction: row;
-    justify-content: stretch;
-}
-
-.key {
-    align-items: center;
-    background-color: #dce1ed;
-    color: #5a6376;
-    border: 2px solid transparent;
-    border-radius: 4px;
-    color: inherit;
-    cursor: pointer;
-    user-select: none;
-    display: flex;
-    flex: 1 1;
-    font-size: 17px;
-    font-weight: 700;
-    justify-content: center;
-    margin: 3px;
-    min-height: 46px;
-    padding: 3px;
-    text-decoration: inherit;
-    text-transform: capitalize;
-    transition: .2s;
-}
-@media (hover: hover) and (pointer: fine) {
-    .key:hover {
-        background-color: #bcc1cd;
-    }
-}
-
-
-.above_letter {
-    vertical-align: middle;
-    text-align: center;
-    display:inline-block;
-    cursor: pointer;
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
-.letter-mini {
-    vertical-align: middle;
-    width: 70px;
-    height: 70px;
-    word-wrap: break-word;
-    line-height: 21px;
-    text-align: center;
-    color: #5a6376;
-    color: inherit;
-    font-size: 20px;
-    font-weight: 700;
-    text-decoration: inherit;
-    text-transform: lowercase;
-    display: inline-block;
-    border: 1px solid transparent;
-    border-color: #0d6efd;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px;
-    margin-bottom: 20px;
-
-}
-@media (hover: hover) and (pointer: fine) {
-    .letter-mini:hover {
-        background-color: #0d6efd;
-    }
-}
-
-.letter {
-    vertical-align: middle;
-    width: 70px;
-    height: 70px;
-    text-align: center;
-    color: #5a6376;
-    background-color: #00ff00;
-    font-size: 45px;
-    font-weight: 700;
-    text-decoration: inherit;
-    text-transform: uppercase;
-    display:inline-block;
-    border: 1px solid transparent;
-    border-color: #0d6efd;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-@media (hover: hover) and (pointer: fine) {
-    .letter:hover {
-        background-color: #0d6efd;
-    }
-}
-
-
-.check {
-    font-size: 30px;
-}
-
-      .bd-placeholder-img {
-        font-size: 1.125rem;
-        text-anchor: middle;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        user-select: none;
-      }
-
-      @media (min-width: 768px) {
-        .bd-placeholder-img-lg {
-          font-size: 3.5rem;
+        .warning {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #ff0000;
+            font-size: 20px;
+            font-weight: 700;
+            text-decoration: inherit;
+            min-height: 30px;
         }
-      }
+
+        .row{
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .App-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            margin: 0 auto;
+            width: 100%;
+            position: relative;
+        }
+        .App-container, .cont, .sect_m {
+            max-width: 800px;
+        }
+
+        .Keyboard-row {
+            display: flex;
+            flex-direction: row;
+            justify-content: stretch;
+        }
+
+        .key {
+            align-items: center;
+            border: 2px solid transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            flex: 1 1;
+            font-size: 17px;
+            font-weight: 700;
+            justify-content: center;
+            margin: 3px;
+            min-height: 46px;
+            padding: 3px;
+            text-decoration: inherit;
+            text-transform: capitalize;
+            transition: .2s;
+        }
+        @media (hover: hover) and (pointer: fine) {
+            .key:hover {
+                background-color: #abb0bc;
+            }
+        }
+
+        .key_color {
+            background-color: #dce1ed;
+            color: #5a6376;
+            color: inherit;
+        }
+
+        .key_color_active {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+        .above_letter {
+            vertical-align: middle;
+            text-align: center;
+            display:inline-block;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        .letter-mini {
+            vertical-align: middle;
+            width: 70px;
+            height: 70px;
+            word-wrap: break-word;
+            line-height: 21px;
+            text-align: center;
+            color: #5a6376;
+            color: inherit;
+            font-size: 20px;
+            font-weight: 700;
+            text-decoration: inherit;
+            text-transform: lowercase;
+            display: inline-block;
+            border: 1px solid transparent;
+            border-color: #0d6efd;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-bottom: 20px;
+
+        }
+        @media (hover: hover) and (pointer: fine) {
+            .letter-mini:hover {
+                background-color: #0d6efd;
+            }
+        }
+
+        .letter {
+            vertical-align: middle;
+            width: 70px;
+            height: 70px;
+            color: white;
+            background-color: #00ff00;
+            text-align: center;
+            font-size: 45px;
+            font-weight: 700;
+            text-decoration: inherit;
+            text-transform: uppercase;
+            display:inline-block;
+            border: 1px solid transparent;
+            border-color: #0d6efd;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+        @media (hover: hover) and (pointer: fine) {
+            .letter:hover {
+                background-color: #0d6efd;
+            }
+        }
+
+        .letter_active {
+            background-color: #0d6efd;
+            color: white;
+        }
+
+
+        .check {
+            font-size: 30px;
+        }
+
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            user-select: none;
+        }
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+
     </style>
 
     
@@ -224,109 +227,109 @@
 
   <div class="Keyboard-row">
     <div class="col">
-      <div class='key' id='key1'>А</div>
+      <div class='key key_color' id='key1'>А</div>
     </div>
     <div class="col">
-      <div class='key' id='key2'>Б</div>
+      <div class='key key_color' id='key2'>Б</div>
     </div>
     <div class="col">
-      <div class='key' id='key3'>В</div>
+      <div class='key key_color' id='key3'>В</div>
     </div>
     <div class="col">
-      <div class='key' id='key4'>Г</div>
+      <div class='key key_color' id='key4'>Г</div>
     </div>
     <div class="col">
-      <div class='key' id='key5'>Д</div>
+      <div class='key key_color' id='key5'>Д</div>
     </div>
     <div class="col">
-      <div class='key' id='key6'>Е</div>
+      <div class='key key_color' id='key6'>Е</div>
     </div>
     <div class="col">
-      <div class='key' id='key7'>Ж</div>
+      <div class='key key_color' id='key7'>Ж</div>
     </div>
     <div class="col">
-      <div class='key' id='key8'>З</div>
+      <div class='key key_color' id='key8'>З</div>
     </div>
     <div class="col">
-      <div class='key' id='key9'>И</div>
+      <div class='key key_color' id='key9'>И</div>
     </div>
     <div class="col">
-      <div class='key' id='key10'>Й</div>
+      <div class='key key_color' id='key10'>Й</div>
     </div>
     <div class="col">
-      <div class='key' id='key11'>К</div>
-    </div>
-  </div>
-
-  <div class="Keyboard-row">
-    <div class="col">
-      <div class='key' id='key12'>Л</div>
-    </div>
-    <div class="col">
-      <div class='key' id='key13'>М</div>
-    </div>
-    <div class="col">
-      <div class='key' id='key14'>Н</div>
-    </div>
-    <div class="col">
-      <div class='key' id='key15'>О</div>
-    </div>
-    <div class="col">
-      <div class='key' id='key16'>П</div>
-    </div>
-    <div class="col">
-      <div class='key' id='key17'>Р</div>
-    </div>
-    <div class="col">
-      <div class='key' id='key18'>С</div>
-    </div>
-    <div class="col">
-      <div class='key' id='key19'>Т</div>
-    </div>
-    <div class="col">
-      <div class='key' id='key20'>У</div>
-    </div>
-    <div class="col">
-      <div class='key' id='key21'>Ф</div>
-    </div>
-    <div class="col">
-      <div class='key' id='key22'>Х</div>
+      <div class='key key_color' id='key11'>К</div>
     </div>
   </div>
 
   <div class="Keyboard-row">
     <div class="col">
-      <div class='key' id='key23'>Ц</div>
+      <div class='key key_color' id='key12'>Л</div>
     </div>
     <div class="col">
-      <div class='key' id='key24'>Ч</div>
+      <div class='key key_color' id='key13'>М</div>
     </div>
     <div class="col">
-      <div class='key' id='key25'>Ш</div>
+      <div class='key key_color' id='key14'>Н</div>
     </div>
     <div class="col">
-      <div class='key' id='key26'>Щ</div>
+      <div class='key key_color' id='key15'>О</div>
     </div>
     <div class="col">
-      <div class='key' id='key27'>Ъ</div>
+      <div class='key key_color' id='key16'>П</div>
     </div>
     <div class="col">
-      <div class='key' id='key28'>Ы</div>
+      <div class='key key_color' id='key17'>Р</div>
     </div>
     <div class="col">
-      <div class='key' id='key29'>Ь</div>
+      <div class='key key_color' id='key18'>С</div>
     </div>
     <div class="col">
-      <div class='key' id='key30'>Э</div>
+      <div class='key key_color' id='key19'>Т</div>
     </div>
     <div class="col">
-      <div class='key' id='key31'>Ю</div>
+      <div class='key key_color' id='key20'>У</div>
     </div>
     <div class="col">
-      <div class='key' id='key32'>Я</div>
+      <div class='key key_color' id='key21'>Ф</div>
     </div>
     <div class="col">
-      <div class='key' id='key33'><i class="fa fa-refresh" aria-hidden="true"></i></div>
+      <div class='key key_color' id='key22'>Х</div>
+    </div>
+  </div>
+
+  <div class="Keyboard-row">
+    <div class="col">
+      <div class='key key_color' id='key23'>Ц</div>
+    </div>
+    <div class="col">
+      <div class='key key_color' id='key24'>Ч</div>
+    </div>
+    <div class="col">
+      <div class='key key_color' id='key25'>Ш</div>
+    </div>
+    <div class="col">
+      <div class='key key_color' id='key26'>Щ</div>
+    </div>
+    <div class="col">
+      <div class='key key_color' id='key27'>Ъ</div>
+    </div>
+    <div class="col">
+      <div class='key key_color' id='key28'>Ы</div>
+    </div>
+    <div class="col">
+      <div class='key key_color' id='key29'>Ь</div>
+    </div>
+    <div class="col">
+      <div class='key key_color' id='key30'>Э</div>
+    </div>
+    <div class="col">
+      <div class='key key_color' id='key31'>Ю</div>
+    </div>
+    <div class="col">
+      <div class='key key_color' id='key32'>Я</div>
+    </div>
+    <div class="col">
+      <div class='key key_color' id='key33'><i class="fa fa-refresh" aria-hidden="true"></i></div>
     </div>
   </div>
 

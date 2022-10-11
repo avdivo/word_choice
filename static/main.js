@@ -3,7 +3,8 @@ var ban;  // Представляет объект ban, запрещающий �
 // ------------------------------------------------------------------------------------
 
 // Вывод предупреждения
-function warning(mess) {
+function warning(mess, color='red') {
+    $('#warning').css('color', color); // Установка цвета для строки
     $('#warning').text(mess); // Показать сообщение
 
     // Скрываем сообщение
@@ -90,22 +91,27 @@ class Lists {
             return false
         }
         Lists.deactivate();
-        this.element.css({'background-color': this.active_bg});
-        this.element.css({'color': this.active_ink});
+//        this.element.css({'background-color': this.active_bg});
+//        this.element.css({'color': this.active_ink});
+//        this.element.removeClass('key_color_active');
+        this.element.addClass('letter_active');
+
         return true
     }
 
     // Вернуть цвета фона и текста, которые нужно установить для фильтра когда он не активен
     colors() {
-        return [this.old_bg, this.old_ink];
+        return 'btn btn-outline-primary';
     }
 
     // Деактивация всех переключателей фильтров кроме букв(возврат в исходное состояние)
     static deactivate() {
         for (let item of Object.values(Lists.filter)) {
-            let [bg, ink] = item.colors();
-            item.element.css({'background-color': bg});
-            item.element.css({'color': ink});
+            let old_class = item.colors();
+//            item.element.css({'background-color': bg});
+//            item.element.css({'color': ink});
+            item.element.removeClass();
+            item.element.addClass(old_class);
         }
     }
 
@@ -123,6 +129,7 @@ class Lists {
         } else {
             if (this.what_type == 'Letters') {
                 if (this.here && this.list.length > 0) {
+                    warning('Нельзя постваить вторую угадонную букву в одну позицию');
                     return true;  // Попытка постваить вторую угадонную букву в одну позицию
                 }
             }
@@ -147,12 +154,6 @@ class Letters extends Lists {
         this.what_type = 'Letters';
         this.element = element; // Объекд в DOM отвечающий за выбор фильтра
         this.list = new String('');  // Список выбранных букв
-        this.old_bg = 'rgb(255, 255, 255)';  // Устанавливаем исходный цвет фона
-        this.old_ink = 'rgb(13, 110, 253)'; // Устанавливаем исходный цвет текста
-        this.active_bg = '#0d6efd';  // Цвет фона, когда фильтр активен
-        this.active_ink = 'white';  // Цвет текста, когда фильтр активен
-        this.here_bg = '#00ff00';  // Цвет фона, когда известна буква
-        this.here_ink = 'white';  // Цвет текста, когда известна буква
         this.here = false;  // Определяет, стоит ли в этой позиции буква из списка. Или она в этом слове, но не здксь
         Lists.filter[element.attr('id')] = this
     }
@@ -160,7 +161,7 @@ class Letters extends Lists {
     // Вернуть цвета фона и текста, которые нужно установить для фильтра когда он не активен
     // Этот класс имеет другие цвета для фильтров, когда буква стоит на месте
     colors() {
-        return [this.here ? this.here_bg : this.old_bg, this.here ? this.here_ink : this.old_ink];
+        return this.here ? 'letter' : 'letter-mini';
     }
 
     // Изменение чекбокса буквы (меняется стстус: эта буква стоит тут или эта буква есть в этом слове, но не тут)
@@ -174,8 +175,10 @@ class Letters extends Lists {
             }
             // изменим значение DOM-свойства className
             this.element.prop('className', 'letter');
+            warning('Определена буква для этой позиции', 'blue');
         } else {
             this.element.prop('className', 'letter-mini');
+            warning('Для этой позиции буква не определена', 'blue');
         }
         this.out_letters();
     }
@@ -185,7 +188,6 @@ class Letters extends Lists {
         this.element.text(this.list);
     }
 
-
 }
 
 // -------------------------------------------------------------------------------------
@@ -193,8 +195,6 @@ class Letters extends Lists {
 class Keyboard {
     constructor (keys, filter) {
         this.keys = keys; // Ассоциированнй массив id в DOM и самих объектов клавиш
-        this.old_bg = keys[Object.keys(keys)[0]].css('background-color'); // Исходный цвет клавиш
-        this.old_ink = keys[Object.keys(keys)[0]].css('color'); // Исходный цвет текста клавиш
         this.filter = filter;  // Объект класса фильтр, активный в данный момент
         filter.activate();
         this.clearKB();
@@ -221,20 +221,19 @@ class Keyboard {
             // Очистка фильтра
             this.clearKB();
             this.filter.list = new String('');
-            warning('Фильтр очищен');
+            warning('Фильтр очищен', 'blue');
         }
 
         let letter = this.keys[keyID].text().toLowerCase();
         if (this.filter.is_letter(letter)) {
             // Буква была в фильтре
-            this.keys[keyID].css({'background-color': this.old_bg});
-            this.keys[keyID].css({'color': this.old_ink});
+            this.keys[keyID].removeClass('key_color_active');
+            this.keys[keyID].addClass('key_color');
+
         } else {
             // Буквы не было в фильтре
-//            this.keys[keyID].css({'background-color': '#0d6efd'});
-//            this.keys[keyID].css({'color': 'white'});
-            this.keys[keyID].removeClass('key');
-            this.keys[keyID].addClass('activate_filter');
+            this.keys[keyID].removeClass('key_color');
+            this.keys[keyID].addClass('key_color_active');
         }
     }
 
@@ -242,27 +241,24 @@ class Keyboard {
     initKeyboard() {
         let alphabet = 'абвгдежзийклмнопрстуфхцчшщъыбэюя';
         for (let i = 0; i < this.filter.list.length; i++) {
-            this.keys['key' + (alphabet.indexOf(this.filter.list[i])+1)].css({'background-color': '#0d6efd'})
-            this.keys['key' + (alphabet.indexOf(this.filter.list[i])+1)].css({'color': 'white'});
+            this.keys['key' + (alphabet.indexOf(this.filter.list[i])+1)].removeClass('key_color');
+            this.keys['key' + (alphabet.indexOf(this.filter.list[i])+1)].addClass('key_color_active');
         }
     }
 
     // Очистка клавиатуры
     clearKB() {
         for (let i = 1; i < 33; i++) {
-            this.keys['key' + i].css({'background-color': this.old_bg})
-            this.keys['key' + i].css({'color': this.old_ink});
-            this.keys['key' + i].prop('className', 'key');
+            this.keys['key' + i].removeClass('key_color_active');
+            this.keys['key' + i].addClass('key_color');
         }
-
     }
-
 
 }
 
 // -------------------------------------------------------------------------------------
-$(document).ready(function(){
-
+// Инициализация
+function init() {
     // Инициализация фильтров
     new Lists($('#black_list'));  // Черный список
     new Lists($('#white_list'));  // Белый список
@@ -280,12 +276,22 @@ $(document).ready(function(){
     kb = new Keyboard(kb, Lists.filter['black_list']);  // Инициализация клавиатуры
 
     ban = new Ban($('#ban'));  // Фильтр разрешает или запещает дубли букв в слове
+}
+
+
+// -------------------------------------------------------------------------------------
+$(document).ready(function(){
+
+init(); // Инициализация
 
 // ------------------ Обработка событий -------------------------
     // Списки (черный, белый, дубли)
     $('.btn').click(function(){
         if (this.id in Lists.filter ){
             kb.activateFilter(Lists.filter[this.id]);
+        }
+        if (this.id == 'refresh') {
+            init();
         }
     });
 
