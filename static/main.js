@@ -67,10 +67,6 @@ class Lists {
         this.element = element; // Объекд в DOM отвечающий за выбор фильтра
         this.name = element.attr('id');
         this.list = new String('');  // Список выбранных букв
-        this.old_bg = 'rgba(0, 0, 0, 0)'; // Устанавливаем исходный цвет фона
-        this.old_ink = 'rgb(13, 110, 253)'; // Устанавливаем исходный цвет текста
-        this.active_bg = '#0d6efd';  // Цвет фона, когда фильтр активен
-        this.active_ink = 'white';  // Цвет текста, когда фильтр активен
         Lists.filter[this.name] = this;
     }
 
@@ -91,11 +87,7 @@ class Lists {
             return false
         }
         Lists.deactivate();
-//        this.element.css({'background-color': this.active_bg});
-//        this.element.css({'color': this.active_ink});
-//        this.element.removeClass('key_color_active');
         this.element.addClass('letter_active');
-
         return true
     }
 
@@ -108,8 +100,6 @@ class Lists {
     static deactivate() {
         for (let item of Object.values(Lists.filter)) {
             let old_class = item.colors();
-//            item.element.css({'background-color': bg});
-//            item.element.css({'color': ink});
             item.element.removeClass();
             item.element.addClass(old_class);
         }
@@ -122,8 +112,9 @@ class Lists {
 
     // Есть ли буква в списке. Если нет - добавить, если есть удалить. Вернуть результат, была или нет
     is_letter(letter) {
-        if (this.list.indexOf(letter) > -1){
-            this.list = this.list.replace(letter, '');
+        let list = this.list.toLowerCase(); // Список букв в нижнем регистре
+        if (list.indexOf(letter) > -1){
+            this.list = list.replace(letter, '');
             this.out_letters();
             return true;
         } else {
@@ -133,7 +124,7 @@ class Lists {
                     return true;  // Попытка постваить вторую угадонную букву в одну позицию
                 }
             }
-            this.list = this.list + letter;
+            this.list = list + letter;
             this.out_letters();
             return false;
         }
@@ -142,7 +133,6 @@ class Lists {
     // Метод вывода выбранных букв в поле фильтра. В этом классе уфильтра нет поля и метод пустой
     out_letters() {
     }
-
 
 }
 
@@ -174,17 +164,20 @@ class Letters extends Lists {
                 this.list = '';  // Очищаем фильтр, если в нем более 1 буквы (угаданная будет только 1)
             }
             // изменим значение DOM-свойства className
-            this.element.prop('className', 'letter');
+            this.element.prop('className', 'letter letter_active');
             warning('Определена буква для этой позиции', 'blue');
         } else {
-            this.element.prop('className', 'letter-mini');
+            this.element.prop('className', 'letter-mini letter_active');
             warning('Для этой позиции буква не определена', 'blue');
         }
         this.out_letters();
     }
 
-    // Метод вывода выбранных букв в поле фильтра
+    // Метод вывода выбранных букв в поле фильтра и изменения регистра для случая угаданной буквы
     out_letters() {
+        if (this.here) {
+            this.list = this.list.toUpperCase();
+        }
         this.element.text(this.list);
     }
 
@@ -207,6 +200,9 @@ class Keyboard {
 
     // Активация фильтров, клавиатура переходит к новому фильтру
     activateFilter(filter) {
+        if (this.filter.name == filter.name) {
+            return;
+        }
         if (filter.activate()) {
             // Активация фильтра успешна
             this.filter = filter;
@@ -228,11 +224,11 @@ class Keyboard {
         if (this.filter.is_letter(letter)) {
             // Буква была в фильтре
             this.keys[keyID].removeClass('key_color_active');
-            this.keys[keyID].addClass('key_color');
+//            this.keys[keyID].addClass('key_color');
 
         } else {
             // Буквы не было в фильтре
-            this.keys[keyID].removeClass('key_color');
+//            this.keys[keyID].removeClass('key_color');
             this.keys[keyID].addClass('key_color_active');
         }
     }
@@ -241,7 +237,7 @@ class Keyboard {
     initKeyboard() {
         let alphabet = 'абвгдежзийклмнопрстуфхцчшщъыбэюя';
         for (let i = 0; i < this.filter.list.length; i++) {
-            this.keys['key' + (alphabet.indexOf(this.filter.list[i])+1)].removeClass('key_color');
+//            this.keys['key' + (alphabet.indexOf(this.filter.list[i])+1)].removeClass('key_color');
             this.keys['key' + (alphabet.indexOf(this.filter.list[i])+1)].addClass('key_color_active');
         }
     }
@@ -250,7 +246,7 @@ class Keyboard {
     clearKB() {
         for (let i = 1; i < 33; i++) {
             this.keys['key' + i].removeClass('key_color_active');
-            this.keys['key' + i].addClass('key_color');
+//            this.keys['key' + i].addClass('key_color');
         }
     }
 
@@ -282,7 +278,7 @@ function init() {
 // -------------------------------------------------------------------------------------
 $(document).ready(function(){
 
-init(); // Инициализация
+    init(); // Инициализация
 
 // ------------------ Обработка событий -------------------------
     // Списки (черный, белый, дубли)
@@ -291,7 +287,7 @@ init(); // Инициализация
             kb.activateFilter(Lists.filter[this.id]);
         }
         if (this.id == 'refresh') {
-            init();
+            location.reload();
         }
     });
 
@@ -316,6 +312,5 @@ init(); // Инициализация
     $('.key').click(function(){
         kb.pressKey(this.id);
     });
-
 
 });
