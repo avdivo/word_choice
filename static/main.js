@@ -224,11 +224,9 @@ class Keyboard {
         if (this.filter.is_letter(letter)) {
             // Буква была в фильтре
             this.keys[keyID].removeClass('key_color_active');
-//            this.keys[keyID].addClass('key_color');
 
         } else {
             // Буквы не было в фильтре
-//            this.keys[keyID].removeClass('key_color');
             this.keys[keyID].addClass('key_color_active');
         }
     }
@@ -236,9 +234,9 @@ class Keyboard {
     // Включение на клавиатуре выбранных в фильтре букв
     initKeyboard() {
         let alphabet = 'абвгдежзийклмнопрстуфхцчшщъыбэюя';
-        for (let i = 0; i < this.filter.list.length; i++) {
-//            this.keys['key' + (alphabet.indexOf(this.filter.list[i])+1)].removeClass('key_color');
-            this.keys['key' + (alphabet.indexOf(this.filter.list[i])+1)].addClass('key_color_active');
+        let list = this.filter.list.toLowerCase();
+        for (let i = 0; i < list.length; i++) {
+            this.keys['key' + (alphabet.indexOf(list[i])+1)].addClass('key_color_active');
         }
     }
 
@@ -246,7 +244,6 @@ class Keyboard {
     clearKB() {
         for (let i = 1; i < 33; i++) {
             this.keys['key' + i].removeClass('key_color_active');
-//            this.keys['key' + i].addClass('key_color');
         }
     }
 
