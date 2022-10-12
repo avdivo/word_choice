@@ -317,8 +317,22 @@ function init() {
 
 // -------------------------------------------------------------------------------------
 // Отправка фильтров на API. Получение слов и вывод
-function get_words(filter){
-        var data = filter  // Получаем и передаем как JSON
+function get_words(){
+        let filter = Lists.filter;
+        let send = {
+            black_list: filter['black_list'].list,
+            white_list: filter['white_list'].list,
+            existing_letters: {
+                0: filter['l1'].list,
+                1: filter['l2'].list,
+                2: filter['l3'].list,
+                3: filter['l4'].list,
+                4: filter['l5'].list
+            },
+            double_letter: filter['double_letter'].list,
+            ban: ban.ban
+        };
+        let data = JSON.stringify(send);
 
          $.ajax({
              url: 'http://127.0.0.1:8000/',
@@ -329,12 +343,6 @@ function get_words(filter){
              data: data,
              cache: true,
              success: function (data) {
-                 // console.log(data.products);
-//                $('#exampleModal').modal('show'); // Показать сообщение о добавлении товара в корзину
-//                 // Сурываем сообщение о добавлении товара в корзину
-//                setTimeout(function(){
-//                    $('#exampleModal').modal('hide');
-//                }, 1100);
 
                 // Изменяем отображаемое значение на корзине
                 let s = 0;
@@ -344,8 +352,10 @@ function get_words(filter){
                     s = s + data[i].length;
                 }
                 $('#out').append('<div class="alert alert-danger" role="alert">Всего: ' + s + " слов.</div>");
-                document.location.href = $('#out').attr("href");
-//jQuery('#out')[0].scrollintoView (true);
+
+                // Переход к выведенным словам
+                var destination = $('#out').offset().top;
+                jQuery("html:not(:animated),body:not(:animated)").animate({scrollTop: destination}, 0);
 
              },
              error: function(){
@@ -375,22 +385,7 @@ $(document).ready(function(){
 
     // Отправка
     $('#submit').click(function(){
-        let filter = Lists.filter;
-        let send = {
-            black_list: filter['black_list'].list,
-            white_list: filter['white_list'].list,
-            existing_letters: {
-                0: filter['l1'].list,
-                1: filter['l2'].list,
-                2: filter['l3'].list,
-                3: filter['l4'].list,
-                4: filter['l5'].list
-            },
-            double_letter: filter['double_letter'].list,
-            ban: ban.ban
-        };
-        let json = JSON.stringify(send);
-        get_words(json);
+        get_words();
     });
 
     // Буквы слова
@@ -408,6 +403,7 @@ $(document).ready(function(){
     // Запрет дублей
     $('#ban').click(function(){
         ban.set();
+        get_words();
     });
 
     // Нажатие клавиш на клавиатуре
