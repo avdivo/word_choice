@@ -111,6 +111,8 @@ class Lists {
     }
 
     // Есть ли буква в списке. Если нет - добавить, если есть удалить. Вернуть результат, была или нет
+    // Проверяет и не допускает фильтры класса Letters на длину строки не более 4 символов
+    // Проверяет и не допускает пересечения фильтров с черным списком
     is_letter(letter) {
         let list = this.list.toLowerCase(); // Список букв в нижнем регистре
         if (list.indexOf(letter) > -1){
@@ -118,7 +120,28 @@ class Lists {
             this.out_letters();
             return true;
         } else {
+            if (this.name == 'black_list') {
+                let letters = '';
+                for (let item of Object.values(Lists.filter)) {
+                    letters = letters + item.list;
+                    letters = letters.toLowerCase();
+                }
+                if (letters.indexOf(letter) > -1) {
+                    warning('Эта буква есть в других фильтрах, поэтому не может быть добавлена в Черный список');
+                    return true;
+                }
+            } else {
+                let letters = Lists.filter['black_list'].list;
+                if (letters.indexOf(letter) > -1) {
+                    warning('Эта буква есть в Черном списке, поэтому не может быть добавлена в другие фильтры');
+                    return true;
+                }
+            }
             if (this.what_type == 'Letters') {
+                if (this.list.length > 3) {
+                    warning('Нельзя постваить более 4 букв в одну позицию');
+                    return true;
+                }
                 if (this.here && this.list.length > 0) {
                     warning('Нельзя постваить вторую угадонную букву в одну позицию');
                     list = '';  // Попытка постваить вторую угадонную букву в одну позицию
@@ -237,7 +260,7 @@ class Keyboard {
 
     // Включение на клавиатуре выбранных в фильтре букв
     initKeyboard() {
-        let alphabet = 'абвгдежзийклмнопрстуфхцчшщъыбэюя';
+        let alphabet = 'йцукенгшщзхфывапролджэъячсмитьбю';
         let list = this.filter.list.toLowerCase();
         for (let i = 0; i < list.length; i++) {
             this.keys['key' + (alphabet.indexOf(list[i])+1)].addClass('key_color_active');
