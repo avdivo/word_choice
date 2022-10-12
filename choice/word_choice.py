@@ -90,6 +90,7 @@ def word_choice(filter):
         exist_out_of_position_inverse = set()
         filter_work_exist_in_position = False  # Если фильтр работал, то применяем его результаты к списку,
         filter_work_exist_out_of_position = False  # даже еси результат пустой
+        first = True
         for pos, val in filter.existing_letters.items():
             if val:
                 if val.islower():
@@ -101,13 +102,13 @@ def word_choice(filter):
                             if i != pos:
                                 # Ключи множеств, где буква находится в не запрещенных местах
                                 exist_out_of_position_inverse.add(f'....{letter}....'[4 - i:9 - i])
-                        if exist_out_of_position:
-                            # Для букв которые стоят
-                            exist_out_of_position &= set(map(lambda x: x.decode('utf-8'),
-                                                             r.sunion(exist_out_of_position_inverse)))
-                        else:
+                        if first:
+                            first = False
                             exist_out_of_position = set(map(lambda x: x.decode('utf-8'),
                                                             r.sunion(exist_out_of_position_inverse)))
+                        else:
+                            exist_out_of_position &= set(map(lambda x: x.decode('utf-8'),
+                                                             r.sunion(exist_out_of_position_inverse)))
                         # При 2 искомых буквах в слове. Слово будет включно в список, поскольку имеет
                         # нужную букву там где она не запрещена, однако оно же может иметь букву в позиции
                         # где она запрещена. Поэтому очистим список от слов имеющих букву в запрещенной позиции
