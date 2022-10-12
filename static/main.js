@@ -347,11 +347,14 @@ function get_words(){
                 // Изменяем отображаемое значение на корзине
                 let s = 0;
                 $('#out').text('');
+                let time = data['time'];
+                data = data['words'];
                 for (let i = 0; i < data.length; i++) {
                     $('#out').append('<div class="alert alert-secondary" role="alert">' + data[i].join(', ') + "</div>");
                     s = s + data[i].length;
                 }
-                $('#out').append('<div class="alert alert-danger" role="alert">Всего: ' + s + " слов.</div>");
+                $('#out').append('<div class="alert alert-danger" role="alert">Всего: ' + s + " слов</div>");
+                $('#out').append('<div class="alert alert-danger" role="alert"> ' + time + " </div>");
 
                 // Переход к выведенным словам
                 var destination = $('#out').offset().top;

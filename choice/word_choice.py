@@ -163,9 +163,9 @@ def word_choice(filter):
     for i, l in enumerate(number_group):
         if l:
             out_words.append(sorted(l[1]))
-
+    t = f"{(time.time() - start_time) * 1000} миллисекунд"
     # ------------------- Время выполнения ----------------------
-    print(f"{(time.time() - start_time) * 1000} миллисекунд")
+    print(t)
     # ------------------- Время выполнения ----------------------
 
-    return out_words
+    return out_words, t
